@@ -1,25 +1,69 @@
-import logo from './logo.svg';
-import './App.css';
+import items from './data.js';
+import { useState } from 'react';
+import Categories from './Category.js';
+
+
+const allCategories = ['All',...new Set(items.map((item) => item.category))];
+console.log(allCategories);
 
 function App() {
+
+  const [menuItems, setMenuItems] = useState(items);
+  const [categories, setCategories] = useState(allCategories);
+
+  const filterItems = (category) => {
+    if (category == "All"){
+      setMenuItems(items);
+      return;
+    }
+
+    const newItems = items.filter((item) => item.category === category);
+    setMenuItems(newItems);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <section>
+        <header>
+          <h1 className="app-title">Menu</h1>
+        </header>
+
+        <div className="category-menu">
+          <Categories categories={categories} filterItems={filterItems}/>
+        </div>
+
+
+        <div className="container">
+          {menuItems.map((item)=>{
+            const {id, name, image, price, description} = item;
+            return (
+              <div className="menu-item" key={id}>
+                <div className='item-name'>
+                  <h1>{name}</h1>
+                </div>
+                <div className="img-container">
+                  <img src={image} />
+                </div>
+                <div className='item-details'>
+                  <p>{description}</p>
+                </div>
+                <div className='price-container'>
+                  <div><span>$</span>{price}</div>
+                  <button className='atc-btn'>Add to Cart</button>
+                </div>
+              </div>
+            )
+            })
+          }
+        </div>
+      </section>
+
+
+ 
     </div>
   );
 }
 
 export default App;
+
+
